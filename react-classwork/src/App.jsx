@@ -1,35 +1,73 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+// src/App.jsx
+import { Box } from '@mui/material';
+import React, { useContext } from 'react';
+import {
+  Routes,
+  Route,
+  Navigate,
+  Outlet
+} from 'react-router-dom';
+import { AuthContext } from './context/AuthContext';
 
-function App() {
-  const [count, setCount] = useState(0)
+import NavigationBar from './components/NavigationBar';
+import Footer from './components/Footer';
+import Login from './components/Login';
+import Home from './views/Home';
+import About from './views/About';
+import Register     from './views/Register';    
+
+const ProtectedLayout = () => {
+  const { logout } = useContext(AuthContext);
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    <Box
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        minHeight: '100vh'
+      }}
+    >
+      <NavigationBar onLogout={logout} />
+
+      {/* El Outlet (Home, About, etc) crece y empuja el Footer hacia abajo */}
+      <Box sx={{ flexGrow: 1 }}>
+        <Outlet />
+      </Box>
+
+      <Footer />
+    </Box>
+  );
+};
+
+function App() {
+  const { user } = useContext(AuthContext);
+
+  return (
+    <Routes>
+      <Route
+        path="/login"
+        element={ user ? <Navigate to="/" replace /> : <Login /> }
+      />
+
+      <Route
+        path="/register"
+        element={ user ? <Navigate to="/" replace /> : <Register /> }
+      />
+
+      <Route
+        element={ user ? <ProtectedLayout /> : <Navigate to="/login" replace /> }
+      >
+        <Route path="/"      element={<Home />} />
+        <Route path="/about" element={<About />} />
+      </Route>
+
+      <Route
+        path="*"
+        element={ user ? <Navigate to="/" /> : <Navigate to="/login" /> }
+      />
+    </Routes>
+  );
 }
 
-export default App
+export default App;
+

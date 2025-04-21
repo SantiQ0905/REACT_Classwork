@@ -66,3 +66,13 @@ button:focus-visible {
     background-color: #f9f9f9;
   }
 }
+
+/* Asegura que todo el listado de slides se recorte bien */
+.slick-list {
+  overflow: hidden !important;
+  border-radius: 16px !important;
+}
+/* Opcional: quita outlines raros al hacer focus en flechas */
+.slick-slide:focus {
+  outline: none;
+}
