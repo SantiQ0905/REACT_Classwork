@@ -1,4 +1,4 @@
-# Worldsmiths Studios App
+# MyReactPage
 
 **Aplicación web de una sola página** construida con Vite, React y Material UI, que incluye registro, login, páginas protegidas (Home y About), un carrusel de imágenes y gestión de autenticación con JWT.
 
